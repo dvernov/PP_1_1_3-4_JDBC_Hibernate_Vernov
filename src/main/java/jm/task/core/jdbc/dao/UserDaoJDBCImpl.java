@@ -45,7 +45,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         String query = "INSERT INTO " + TABLE_NAME + " (name, last_name, age) VALUES (?, ?, ?)";
 
-        try (PreparedStatement statement = Util.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = Util.getConnection().prepareStatement(query)) {
             statement.setString(1, name);
             statement.setString(2, lastName);
             statement.setByte(3, age);
