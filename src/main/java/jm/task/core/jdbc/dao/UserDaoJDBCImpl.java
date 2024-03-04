@@ -19,7 +19,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() {
-        String query = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
+        String query =  "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                 "id INT NOT NULL AUTO_INCREMENT, " +
                 "name VARCHAR(45) NULL, " +
                 "last_name VARCHAR(45) NULL, " +
