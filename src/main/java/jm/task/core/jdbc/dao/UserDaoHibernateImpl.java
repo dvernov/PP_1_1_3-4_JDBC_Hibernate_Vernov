@@ -39,9 +39,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void dropUsersTable() {
-        String query = """
-                DROP TABLE IF EXISTS %s;
-                """.formatted(TABLE_NAME);
+        String query = "DROP TABLE IF EXISTS %s;".formatted(TABLE_NAME);
 
         try (Session session = Util.getSessionFactory().getCurrentSession()) {
             Transaction transaction = session.beginTransaction();
@@ -58,19 +56,11 @@ public class UserDaoHibernateImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         Transaction transaction = null;
 
-        String preQuery = """
-                INSERT INTO %s (name, last_name, age) VALUES (?, ?, ?)
-                """.formatted(TABLE_NAME);
-
         try (Session session = Util.getSessionFactory().getCurrentSession()) {
             transaction = session.beginTransaction();
-            session.createNativeQuery(preQuery)
-                    .setParameter(1, name)
-                    .setParameter(2, lastName)
-                    .setParameter(3, age)
-                    .executeUpdate();
-
+            session.save(new User(name, lastName, age));
             transaction.commit();
+
         } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -81,14 +71,26 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
+        Transaction transaction = null;
 
+        try (Session session = Util.getSessionFactory().getCurrentSession()) {
+            transaction = session.beginTransaction();
+            session.delete(session.get(User.class, id));
+
+            transaction.commit();
+
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<User> getAllUsers() {
         List<User> listOfUsers;
-        String query = """
-                SELECT * FROM %s""".formatted(TABLE_NAME);
+        String query = "SELECT * FROM %s".formatted(TABLE_NAME);
         try (Session session = Util.getSessionFactory().getCurrentSession()) {
             Transaction transaction = session.beginTransaction();
             listOfUsers = session.createNativeQuery(query, User.class).getResultList();
@@ -101,8 +103,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        String query = """
-                TRUNCATE TABLE %s""".formatted(TABLE_NAME);
+        String query = "TRUNCATE TABLE %s".formatted(TABLE_NAME);
         try (Session session = Util.getSessionFactory().getCurrentSession()) {
             Transaction transaction = session.beginTransaction();
             session.createNativeQuery(query).executeUpdate();
