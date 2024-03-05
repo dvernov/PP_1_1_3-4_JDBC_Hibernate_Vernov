@@ -9,7 +9,7 @@ import org.hibernate.Transaction;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
-    private static final String TABLE_NAME = "users.users2";
+    private static final String TABLE_NAME = "users2";
 
     public UserDaoHibernateImpl() {
 

@@ -29,7 +29,7 @@ public class Util {
     private static SessionFactory buildSessionFactory() {
         Configuration configuration = new Configuration()
                 .setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver")
-                .setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306")
+                .setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/users")
                 .setProperty("hibernate.connection.username", "root1")
                 .setProperty("hibernate.connection.password", "root")
                 .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
